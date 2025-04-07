@@ -4,6 +4,26 @@ const wss = new WebSocket.Server({ port: 3001 });
 
 const rooms = new Map();
 
+wss.on('connection', function connection(ws) {
+  ws.isAlive = true;
+  ws.on('pong', function heartbeat() {
+    ws.isAlive = true;
+  });
+
+  const interval = setInterval(function ping() {
+    wss.clients.forEach(function each(ws) {
+      if (ws.isAlive === false) return ws.terminate();
+
+      ws.isAlive = false;
+      ws.ping();
+    });
+  }, 30000);
+
+  ws.on('close', function close() {
+    clearInterval(interval);
+  });
+});
+
 wss.on('connection', (socket) => {
   let currentRoom = null;
   console.log('🔌 New WebSocket connection');
