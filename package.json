@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "build": "npm install && npm prune --production",
+    "build": "npm install && npm prune --production && cp -r server.js package.json public/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
